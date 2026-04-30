@@ -4,10 +4,20 @@ const path = require("path");
 const { URL } = require("url");
 const { admin, getFirebaseStatus, initializeFirebase } = require("./firebase");
 
-const PORT = 8000;
+const PORT = Number(process.env.PORT || 8000);
 const DATA_PATH = path.join(__dirname, "backend", "data", "cleaned_insurance_hackathon_ready.csv");
 const MODEL_PATH = path.join(__dirname, "backend", "models", "claim_fraud_model.json");
 const LOCAL_CHECKS_PATH = path.join(__dirname, "backend", "local-claim-checks.json");
+const FRONTEND_DIR = path.join(__dirname, "frontend");
+const PUBLIC_DIR = path.join(FRONTEND_DIR, "public");
+const mimeTypes = {
+  ".css": "text/css",
+  ".html": "text/html",
+  ".js": "text/javascript",
+  ".json": "application/json",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+};
 let rows;
 let mlModel;
 const db = initializeFirebase();
@@ -96,6 +106,40 @@ function send(res, data, code = 200) {
     "Access-Control-Allow-Headers": "Content-Type"
   });
   res.end(JSON.stringify(data));
+}
+
+function sendFile(res, filePath) {
+  fs.readFile(filePath, (error, content) => {
+    if (error) {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      return res.end("Not found");
+    }
+
+    res.writeHead(200, { "Content-Type": mimeTypes[path.extname(filePath)] || "application/octet-stream" });
+    res.end(content);
+  });
+}
+
+function serveFrontend(req, res) {
+  const requestedPath = new URL(req.url, `http://127.0.0.1:${PORT}`).pathname;
+  const safePath = requestedPath === "/" ? "/index.html" : requestedPath;
+  let filePath = path.normalize(path.join(FRONTEND_DIR, safePath));
+
+  if (!filePath.startsWith(FRONTEND_DIR)) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Forbidden");
+  }
+
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    return sendFile(res, filePath);
+  }
+
+  filePath = path.normalize(path.join(PUBLIC_DIR, safePath));
+  if (filePath.startsWith(PUBLIC_DIR) && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    return sendFile(res, filePath);
+  }
+
+  return sendFile(res, path.join(FRONTEND_DIR, "index.html"));
 }
 
 function sigmoid(value) {
@@ -490,7 +534,13 @@ http.createServer(async (req, res) => {
     const data = loadRows();
     const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
     const limit = Number(url.searchParams.get("limit") || 10);
-    const p = url.pathname;
+    const rawPath = url.pathname;
+    const usesApiPrefix = rawPath === "/api" || rawPath.startsWith("/api/");
+    const p = usesApiPrefix ? (rawPath === "/api" ? "/" : rawPath.slice(4)) : rawPath;
+
+    if (!usesApiPrefix && (rawPath === "/" || path.extname(rawPath))) {
+      return serveFrontend(req, res);
+    }
 
     if (p === "/") return send(res, { message: "ClaimShield AI backend is running", dataset_found: fs.existsSync(DATA_PATH), dataset_path: DATA_PATH });
     if (p === "/health") return send(res, { status: "ok", app: "ClaimShield AI" });
@@ -534,11 +584,12 @@ http.createServer(async (req, res) => {
       return send(res, { ...item, firebase });
     }
     if (p === "/claim-checks") return send(res, await listClaimChecks(limit));
+    if (!usesApiPrefix) return serveFrontend(req, res);
     send(res, { detail: "Not found" }, 404);
   } catch (err) {
     console.error(err);
     send(res, { detail: err.message }, 500);
   }
-}).listen(PORT, "127.0.0.1", () => {
-  console.log(`ClaimShield AI backend running at http://127.0.0.1:${PORT}`);
+}).listen(PORT, "0.0.0.0", () => {
+  console.log(`ClaimShield AI running at http://127.0.0.1:${PORT}`);
 });

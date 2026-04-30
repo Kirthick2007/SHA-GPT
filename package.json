@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node claimshield-backend.js"
+  },
   "dependencies": {
     "firebase-admin": "^13.8.0"
   }

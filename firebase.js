@@ -11,11 +11,15 @@ function initializeFirebase() {
   if (db) return db;
 
   try {
-    if (!fs.existsSync(SERVICE_ACCOUNT_PATH)) {
+    let serviceAccount = null;
+
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+    } else if (fs.existsSync(SERVICE_ACCOUNT_PATH)) {
+      serviceAccount = require(SERVICE_ACCOUNT_PATH);
+    } else {
       throw new Error("Firebase service account file not found");
     }
-
-    const serviceAccount = require(SERVICE_ACCOUNT_PATH);
 
     if (!admin.apps.length) {
       admin.initializeApp({
@@ -36,6 +40,7 @@ function getFirebaseStatus() {
   return {
     enabled: Boolean(db),
     service_account_found: fs.existsSync(SERVICE_ACCOUNT_PATH),
+    service_account_env_found: Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON),
     error: firebaseError ? firebaseError.message : null,
   };
 }
