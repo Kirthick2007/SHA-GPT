@@ -1,0 +1,21 @@
+﻿CLAIMSHIELD AI - HOW TO RUN
+
+You must keep TWO terminal windows open.
+
+1) Backend terminal:
+cd C:\Users\admin\OneDrive\Documents\claimshield-ai
+node claimshield-backend.js
+
+Check:
+http://127.0.0.1:8000/dashboard/summary
+
+2) Frontend terminal:
+cd C:\Users\admin\OneDrive\Documents\claimshield-ai\frontend
+npm.cmd run dev
+
+Open the frontend URL shown in the terminal, usually:
+http://localhost:5173
+or
+http://localhost:5174
+
+Do not close either terminal while demoing.

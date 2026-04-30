@@ -1,0 +1,8 @@
+node_modules/
+.git-safe-config
+backend/firebase-service-account.json
+backend/local-claim-checks.json
+backend/.pip-temp/
+__pycache__/
+*.pyc
+*.log

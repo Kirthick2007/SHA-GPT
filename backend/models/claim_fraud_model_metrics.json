@@ -1,0 +1,48 @@
+{
+  "model_type": "CustomLogisticRegression",
+  "target_column": "suspicious_rule_label",
+  "label_note": "This hackathon model is trained on suspicious_rule_label, which is a rule-based proxy label. In production, replace it with verified fraud investigation outcomes.",
+  "dataset_rows": 200000,
+  "train_rows": 159999,
+  "test_rows": 40001,
+  "positive_label_rows": 141996,
+  "negative_label_rows": 58004,
+  "features": [
+    "claim_amount",
+    "patient_age",
+    "payment_lag_days",
+    "payment_ratio",
+    "provider_total_claims",
+    "provider_avg_claim_amount",
+    "provider_rejection_rate",
+    "provider_pending_rate",
+    "provider_claim_amount_zscore",
+    "patient_total_claims",
+    "patient_avg_claim_amount",
+    "claim_amount_vs_provider_avg",
+    "claim_amount_vs_patient_avg",
+    "claim_status",
+    "patient_gender",
+    "patient_state",
+    "provider_specialty",
+    "provider_state",
+    "claim_has_payment",
+    "provider_patient_state_mismatch"
+  ],
+  "accuracy": 0.8815,
+  "precision": 0.9677,
+  "recall": 0.8618,
+  "f1": 0.9117,
+  "roc_auc": 0.959,
+  "confusion_matrix": [
+    [
+      10785,
+      816
+    ],
+    [
+      3924,
+      24476
+    ]
+  ],
+  "final_training_loss": 0.2951
+}

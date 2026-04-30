@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420" role="img" aria-labelledby="title desc">
+  <title id="title">Policy holder profile photo</title>
+  <desc id="desc">A polished portrait-style avatar for the ClaimShield policy holder profile.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef2f7"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0.22" x2="0.82" y1="0.1" y2="0.86">
+      <stop offset="0" stop-color="#5b351f"/>
+      <stop offset="0.42" stop-color="#c68a3a"/>
+      <stop offset="0.7" stop-color="#7a4323"/>
+      <stop offset="1" stop-color="#2a1b14"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0.25" x2="0.75" y1="0" y2="1">
+      <stop offset="0" stop-color="#f5c9a8"/>
+      <stop offset="0.58" stop-color="#f0b890"/>
+      <stop offset="1" stop-color="#d98d6f"/>
+    </linearGradient>
+    <clipPath id="circleClip">
+      <circle cx="180" cy="183" r="168"/>
+    </clipPath>
+  </defs>
+  <rect width="360" height="420" fill="url(#bg)"/>
+  <g clip-path="url(#circleClip)">
+    <rect width="360" height="420" fill="#f8fafc"/>
+    <path d="M74 376c18-62 59-91 106-91s89 29 107 91v44H74z" fill="#fff"/>
+    <path d="M105 420c5-43 17-76 35-100 8 17 22 29 40 29 19 0 33-12 41-29 18 24 30 57 35 100z" fill="#f7f1ec"/>
+    <path d="M140 257h80v67c-8 18-21 27-40 27s-32-9-40-27z" fill="#e8a982"/>
+    <path d="M88 191c-4-57 16-112 55-135 30-18 75-15 101 8 24 21 34 58 29 120-6 78-39 123-92 124-52 1-87-39-93-117z" fill="url(#hair)"/>
+    <path d="M105 159c3-46 33-77 75-77 43 0 72 31 75 78 5 79-27 132-75 132s-80-53-75-133z" fill="url(#skin)"/>
+    <path d="M96 168c-19 2-20 42 1 47 4 1 8-2 8-7l-2-32c0-5-3-8-7-8zM264 168c19 2 20 42-1 47-4 1-8-2-8-7l2-32c0-5 3-8 7-8z" fill="#e8a982"/>
+    <path d="M115 137c27-9 45-28 55-56 21 38 55 55 104 53-13-58-48-88-98-88-50 0-85 31-98 87 10 4 23 5 37 4z" fill="url(#hair)"/>
+    <path d="M83 244c11-77 5-134 64-182-48 18-78 57-85 107-5 33 2 59 21 75zM275 245c-8-83-2-134-65-184 54 20 86 64 89 116 2 28-6 51-24 68z" fill="#593017"/>
+    <path d="M125 181c12-10 28-10 40 0" fill="none" stroke="#6c3f2b" stroke-linecap="round" stroke-width="5"/>
+    <path d="M195 181c12-10 28-10 40 0" fill="none" stroke="#6c3f2b" stroke-linecap="round" stroke-width="5"/>
+    <circle cx="146" cy="194" r="8" fill="#2e5d76"/>
+    <circle cx="214" cy="194" r="8" fill="#2e5d76"/>
+    <circle cx="149" cy="191" r="3" fill="#fff"/>
+    <circle cx="217" cy="191" r="3" fill="#fff"/>
+    <path d="M180 200c-5 17-9 28-3 34 4 4 10 4 15 0" fill="none" stroke="#cf8269" stroke-linecap="round" stroke-width="4"/>
+    <path d="M149 250c19 19 44 19 63 0-7 27-55 27-63 0z" fill="#fff"/>
+    <path d="M148 248c19 13 45 13 64 0" fill="none" stroke="#b94e5d" stroke-linecap="round" stroke-width="5"/>
+    <path d="M111 316c26 35 112 36 139 0" fill="none" stroke="#eadbd4" stroke-width="7"/>
+    <path d="M133 54c31-31 95-23 124 18-45-15-86-11-124-18z" fill="#d8a14b" opacity=".75"/>
+    <path d="M96 99c16-29 42-48 78-58-30 25-50 56-60 91z" fill="#2d1c14" opacity=".55"/>
+    <path d="M250 95c21 29 29 65 24 109-8-38-26-72-54-103z" fill="#2d1c14" opacity=".42"/>
+    <circle cx="78" cy="77" r="3" fill="#ffffff" opacity=".9"/>
+    <circle cx="291" cy="101" r="4" fill="#ffffff" opacity=".85"/>
+    <circle cx="117" cy="303" r="3" fill="#ffffff" opacity=".75"/>
+    <circle cx="260" cy="263" r="2.5" fill="#ffffff" opacity=".8"/>
+  </g>
+</svg>
