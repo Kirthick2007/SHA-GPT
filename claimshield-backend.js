@@ -22,6 +22,8 @@ let rows;
 let mlModel;
 const db = initializeFirebase();
 let firebaseRuntimeDisabledReason = "";
+let datasetLoading = false;
+let datasetLoadError = null;
 
 function splitCsv(line) {
   const out = [];
@@ -54,6 +56,7 @@ function value(v) {
 function loadRows() {
   if (rows) return rows;
   if (!fs.existsSync(DATA_PATH)) throw new Error("CSV dataset not found. Run backend/prepare_data.py first.");
+  datasetLoading = true;
   console.log("Loading CSV dataset...");
   const lines = fs.readFileSync(DATA_PATH, "utf8").replace(/^\uFEFF/, "").split(/\r?\n/).filter(Boolean);
   const headers = splitCsv(lines[0]);
@@ -63,8 +66,35 @@ function loadRows() {
     headers.forEach((h, i) => row[h] = value(vals[i]));
     return row;
   });
+  datasetLoading = false;
+  datasetLoadError = null;
   console.log(`Loaded ${rows.length} claims.`);
   return rows;
+}
+
+function startDatasetLoad() {
+  if (rows || datasetLoading) return;
+  datasetLoading = true;
+  setTimeout(() => {
+    try {
+      loadRows();
+    } catch (error) {
+      datasetLoading = false;
+      datasetLoadError = error;
+      console.error(error);
+    }
+  }, 0);
+}
+
+function requireDataset(res) {
+  if (rows) return rows;
+  if (datasetLoadError) {
+    send(res, { detail: datasetLoadError.message }, 500);
+    return null;
+  }
+  startDatasetLoad();
+  send(res, { detail: "Dataset is loading. Try again shortly." }, 503);
+  return null;
 }
 
 function loadModel() {
@@ -557,7 +587,8 @@ http.createServer(async (req, res) => {
       });
     }
 
-    const data = loadRows();
+    const data = requireDataset(res);
+    if (!data) return;
     if (p === "/dashboard/summary") return send(res, summary(data));
     if (p === "/dashboard/recent-suspicious") return send(res, recentSuspicious(data, limit));
     if (p === "/providers/risk") return send(res, providerRisk(data, limit));

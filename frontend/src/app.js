@@ -57,10 +57,25 @@ const money = new Intl.NumberFormat("en-US", {
 });
 const number = new Intl.NumberFormat("en-US");
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function request(path) {
-  const response = await fetch(`${API_BASE_URL}${path}`);
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
-  return response.json();
+  for (let attempt = 0; attempt < 15; attempt++) {
+    try {
+      const response = await fetch(`${API_BASE_URL}${path}`);
+      if (response.ok) return response.json();
+      if (![502, 503, 504].includes(response.status)) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+    } catch (error) {
+      if (attempt === 14) throw error;
+    }
+    await delay(2000);
+  }
+
+  throw new Error("API request failed after retries");
 }
 
 async function postRequest(path, body) {
@@ -1019,7 +1034,7 @@ async function navigate(page) {
     if (page === "providers") renderProvidersPage();
     if (page === "saved-checks") await renderSavedChecksPage();
   } catch (error) {
-    renderError("Backend data could not load. Keep the backend running on port 8000 and refresh this page.");
+    renderError("Backend data could not load yet. Wait a moment and refresh this page.");
   }
 }
 
