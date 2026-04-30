@@ -531,7 +531,6 @@ async function listClaimChecks(limit) {
 http.createServer(async (req, res) => {
   if (req.method === "OPTIONS") return send(res, {});
   try {
-    const data = loadRows();
     const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
     const limit = Number(url.searchParams.get("limit") || 10);
     const rawPath = url.pathname;
@@ -557,6 +556,8 @@ http.createServer(async (req, res) => {
         target_column: model.target_column,
       });
     }
+
+    const data = loadRows();
     if (p === "/dashboard/summary") return send(res, summary(data));
     if (p === "/dashboard/recent-suspicious") return send(res, recentSuspicious(data, limit));
     if (p === "/providers/risk") return send(res, providerRisk(data, limit));
